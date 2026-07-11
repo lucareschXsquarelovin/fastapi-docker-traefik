@@ -26,4 +26,8 @@ variable "key_name" {
   description = "Name of the AWS key pair for SSH access"
   type        = string
   default     = "devops-weiterbildung"
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 6ff01e7 (feat: add Terraform infrastructure (S3, EC2, k3s, ECR))

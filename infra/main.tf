@@ -11,7 +11,10 @@ provider "aws" {
   region = var.aws_region
 }
 
+<<<<<<< HEAD
 # S3 Bucket for Terraform State
+=======
+>>>>>>> 6ff01e7 (feat: add Terraform infrastructure (S3, EC2, k3s, ECR))
 resource "aws_s3_bucket" "terraform_state" {
   bucket = var.terraform_state_bucket_name
 
@@ -94,4 +97,8 @@ resource "aws_ecr_repository" "app" {
   image_scanning_configuration {
     scan_on_push = true
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 6ff01e7 (feat: add Terraform infrastructure (S3, EC2, k3s, ECR))

@@ -11,4 +11,8 @@ output "k3s_instance_public_ip" {
 output "k3s_instance_id" {
   description = "Instance ID of the k3s EC2 instance"
   value       = aws_instance.k3s.id
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 6ff01e7 (feat: add Terraform infrastructure (S3, EC2, k3s, ECR))
