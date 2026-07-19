@@ -32,13 +32,32 @@ jobs:
           docker build -t $ECR_REGISTRY/devops-weiterbildung:$IMAGE_TAG .
           docker push $ECR_REGISTRY/devops-weiterbildung:$IMAGE_TAG
 
-      - name: Deploy to k3s via SSH
+      - name: Copy manifests & deploy to k3s via SSH
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo k3s kubectl set image deployment/fastapi-app \
+            mkdir -p ~/k8s
+          
+      - name: Copy k8s manifests to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "k8s/"
+          target: "~/"
+
+      - name: Apply manifests & update image
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo kubectl apply -f ~/k8s/
+            sudo kubectl set image deployment/fastapi-app \
               fastapi=${{ secrets.ECR_REGISTRY }}/devops-weiterbildung:${{ github.sha }} \
-              --namespace=default || echo "Deployment not found yet"
+              --namespace=default
