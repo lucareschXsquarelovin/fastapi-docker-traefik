@@ -42,22 +42,23 @@ jobs:
             mkdir -p ~/k8s
           
       - name: Copy k8s manifests to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "k8s/"
-          target: "~/"
-
-      - name: Apply manifests & update image
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          envs: ECR_REGISTRY,IMAGE_TAG
           script: |
+            export ECR_REGISTRY=${{ secrets.ECR_REGISTRY }}
+            export IMAGE_TAG=${{ github.sha }}
+            
+            # Replace placeholder with real image in manifest
+            sed -i "s|PLACEHOLDER_IMAGE|$ECR_REGISTRY/devops-weiterbildung:$IMAGE_TAG|g" ~/k8s/fastapi-deployment.yml
+            
+            # Apply all manifests
             sudo kubectl apply -f ~/k8s/
+            
+            # Force update image
             sudo kubectl set image deployment/fastapi-app \
-              fastapi=${{ secrets.ECR_REGISTRY }}/devops-weiterbildung:${{ github.sha }} \
+              fastapi=$ECR_REGISTRY/devops-weiterbildung:$IMAGE_TAG \
               --namespace=default
