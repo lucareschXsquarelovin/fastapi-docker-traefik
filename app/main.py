@@ -23,3 +23,4 @@ async def startup():
 async def shutdown():
     if database.is_connected:
         await database.disconnect()
+# demo change
