@@ -24,3 +24,8 @@ async def shutdown():
     if database.is_connected:
         await database.disconnect()
 # demo change
+
+
+@app.get("/health")
+async def health_check():
+    return {"status": "ok", "version": "1.0.0"}
