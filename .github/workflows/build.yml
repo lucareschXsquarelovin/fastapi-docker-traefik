@@ -11,6 +11,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      db_url: "postgresql://fastapi:fastapi@localhost:5432/fastapi"
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
