@@ -1,17 +1,14 @@
-import os
-os.environ["DATABASE_URL"] = "postgresql://fastapi:fastapi@localhost:5432/fastapi"
-
 from fastapi.testclient import TestClient
-from fastapi import FastAPI
+import sys
+from unittest.mock import MagicMock
 
-# Create a minimal test app with just the health endpoint
-test_app = FastAPI()
+sys.modules['databases'] = MagicMock()
+sys.modules['ormar'] = MagicMock()
+sys.modules['asyncpg'] = MagicMock()
 
-@test_app.get("/health")
-async def health_check():
-    return {"status": "ok", "version": "1.0.0"}
+from app.main import app
 
-client = TestClient(test_app)
+client = TestClient(app)
 
 
 def test_health_check():
