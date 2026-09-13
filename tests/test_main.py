@@ -1,11 +1,7 @@
+import os
+os.environ["DATABASE_URL"] = "postgresql://fastapi:fastapi@localhost:5432/fastapi"
+
 from fastapi.testclient import TestClient
-import sys
-from unittest.mock import MagicMock
-
-sys.modules['databases'] = MagicMock()
-sys.modules['ormar'] = MagicMock()
-sys.modules['asyncpg'] = MagicMock()
-
 from app.main import app
 
 client = TestClient(app)
