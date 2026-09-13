@@ -11,8 +11,23 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: fastapi
+          POSTGRES_PASSWORD: fastapi
+          POSTGRES_DB: fastapi
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     env:
-      db_url: "postgresql://fastapi:fastapi@localhost:5432/fastapi"
+      DATABASE_URL: "postgresql://fastapi:fastapi@localhost:5432/fastapi"
 
     steps:
       - name: Checkout code
